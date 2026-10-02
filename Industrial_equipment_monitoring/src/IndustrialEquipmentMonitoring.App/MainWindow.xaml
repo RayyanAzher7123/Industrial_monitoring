@@ -1,0 +1,230 @@
+﻿<Window x:Class="IndustrialEquipmentMonitoring.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding EquipmentName, StringFormat='Equipment Monitor — {0}'}"
+        Height="740"
+        Width="1120"
+        MinHeight="640"
+        MinWidth="960"
+        Background="#101215"
+        Foreground="#F4F6F8"
+        FontFamily="Segoe UI"
+        WindowStartupLocation="CenterScreen"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True">
+    <Grid Margin="28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="EQUIPMENT MONITOR"
+                           Foreground="#8E98A8"
+                           FontSize="12"
+                           FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding EquipmentName}"
+                           FontSize="32"
+                           FontWeight="SemiBold"
+                           Margin="0,6,0,0"/>
+                <TextBlock Text="{Binding EndpointText, StringFormat={}{0}  ·  EtherNet/IP explicit messaging}"
+                           Margin="0,6,0,0"
+                           Foreground="#8E98A8"
+                           FontSize="14"/>
+            </StackPanel>
+            <Border Grid.Column="1"
+                    Background="#1A1F27"
+                    BorderBrush="#2C3442"
+                    BorderThickness="1"
+                    CornerRadius="16"
+                    Padding="14,8"
+                    VerticalAlignment="Top">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Width="8" Height="8" Fill="#E7A322" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding SessionText}"
+                               VerticalAlignment="Center"
+                               Foreground="#F4F6F8"
+                               FontSize="13"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Metrics}" Margin="0,22,-12,0">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="5"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,0,12,0"
+                            Padding="16,14"
+                            CornerRadius="10"
+                            Background="#1A1F27"
+                            BorderThickness="1">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="BorderBrush" Value="#2C3442"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Tone}" Value="Good">
+                                        <Setter Property="BorderBrush" Value="#2F6B56"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Tone}" Value="Warn">
+                                        <Setter Property="BorderBrush" Value="#E7A322"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Tone}" Value="Fault">
+                                        <Setter Property="BorderBrush" Value="#FF6B5A"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Label}"
+                                       Foreground="#8E98A8"
+                                       FontSize="11"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding Value}"
+                                       FontSize="28"
+                                       FontWeight="SemiBold"
+                                       Margin="0,8,0,0"
+                                       TextWrapping="Wrap">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#F4F6F8"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Tone}" Value="Good">
+                                                <Setter Property="Foreground" Value="#3DDC97"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Tone}" Value="Warn">
+                                                <Setter Property="Foreground" Value="#F0B429"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Tone}" Value="Fault">
+                                                <Setter Property="Foreground" Value="#FF6B5A"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <TextBlock Text="{Binding Caption}"
+                                       Foreground="#8E98A8"
+                                       FontSize="12"
+                                       Margin="0,8,0,0"
+                                       MinHeight="16"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,20,0,0">
+            <Button Content="Connect"
+                    Command="{Binding ConnectCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,0,10,0"/>
+            <Button Content="Disconnect"
+                    Command="{Binding DisconnectCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Margin="0,0,10,0"/>
+            <Button Content="Start"
+                    Command="{Binding StartCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,0,10,0"/>
+            <Button Content="Stop"
+                    Command="{Binding StopCommand}"
+                    Style="{StaticResource StopButton}"
+                    Margin="0,0,10,0"/>
+            <Button Content="Reset"
+                    Command="{Binding ResetCommand}"
+                    Style="{StaticResource SecondaryButton}"/>
+        </StackPanel>
+
+        <Border Grid.Row="3"
+                Margin="0,20,0,0"
+                Background="#1A1F27"
+                BorderBrush="#2C3442"
+                BorderThickness="1"
+                CornerRadius="10"
+                Padding="16,14">
+            <DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                    <TextBlock Text="EVENT LOG"
+                               Foreground="#8E98A8"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Events.Count, StringFormat={}{0} events}"
+                               Foreground="#8E98A8"
+                               FontSize="12"
+                               HorizontalAlignment="Right"/>
+                </DockPanel>
+                <ListBox x:Name="EventLog"
+                         ItemsSource="{Binding Events}"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         VirtualizingPanel.IsVirtualizing="False">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Focusable" Value="False"/>
+                            <Setter Property="Padding" Value="0,3"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <ContentPresenter/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="78"/>
+                                    <ColumnDefinition Width="64"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding TimeText}"
+                                           FontFamily="Consolas"
+                                           Foreground="#8E98A8"
+                                           VerticalAlignment="Top"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding SeverityText}"
+                                           FontFamily="Consolas"
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Top">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#A8B0BD"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SeverityText}" Value="WARN">
+                                                    <Setter Property="Foreground" Value="#F0B429"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding SeverityText}" Value="ERROR">
+                                                    <Setter Property="Foreground" Value="#FF6B5A"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Grid.Column="2"
+                                           Text="{Binding Message}"
+                                           Foreground="#E6E9EF"
+                                           TextWrapping="Wrap"
+                                           VerticalAlignment="Top"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>

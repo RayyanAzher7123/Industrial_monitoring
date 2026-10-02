@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Equipment>
+  <Name>Welding Unit 01</Name>
+  <Address>127.0.0.1</Address>
+  <Port>44818</Port>
+  <TemperatureLimit>80</TemperatureLimit>
+  <PollIntervalMs>1000</PollIntervalMs>
+</Equipment>
